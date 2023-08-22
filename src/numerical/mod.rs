@@ -167,6 +167,8 @@ pub mod simple_convergency;
 
 #[cfg(test)]
 mod test {
+    use crate::{find_roots_sturm, find_roots_eigen};
+
     use super::*;
 
     #[test]
@@ -253,5 +255,18 @@ mod test {
         };
         assert_eq!(0.5f64, sut1.middle());
         assert_eq!(0f64, sut2.middle());
+    }
+
+
+    #[test]
+    fn test_sturm_eigen(){
+        let coef = vec![3f64,2f64,-6f64, 7f64, 5f64, 4f64, -1f64];
+
+        let root_eigen = find_roots_eigen(coef.clone());
+        let root_sturm = find_roots_sturm(&coef, &mut 1e-12f64);
+       
+        assert_eq!(root_eigen.len(), root_sturm.len());
+        assert_eq!(root_eigen[0],  0.19285603534827161f64);
+        assert_eq!(*root_sturm[0].as_ref().unwrap(),  0.19285603534827192f64);
     }
 }

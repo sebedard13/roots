@@ -30,8 +30,10 @@ use roots::find_root_newton_raphson;
 use roots::find_root_regula_falsi;
 use roots::find_root_secant;
 use roots::find_roots_biquadratic;
+use roots::find_roots_eigen;
 use roots::find_roots_quadratic;
 use roots::find_roots_quartic;
+use roots::find_roots_sturm;
 
 fn x2_min_1(x: f64) -> f64 {
     x * x - 1f64
@@ -93,6 +95,14 @@ fn quartic_x4_min_1_x1000(c: &mut Criterion) {
     c.bench_function("simple", |b| b.iter(|| find_roots_quartic(1f64, 0f64, 0f64, 0f64, -1f64)));
 }
 
+fn sturm_x5_min_1_x1000(c: &mut Criterion) {
+    c.bench_function("sturm_x5_min_1_x1000", |b| b.iter(||find_roots_sturm(&[3f64,2f64,-6f64, 7f64, 5f64, 4f64, -1f64], &mut 1e-12f64)));
+}
+
+fn eigen_x5_min_1_x1000(c: &mut Criterion) {
+    c.bench_function("eigen_x5_min_1_x1000", |b| b.iter(|| find_roots_eigen(vec![3f64,2f64,-6f64, 7f64, 5f64, 4f64, -1f64])));
+}
+
 criterion_group!(
     benches,
     quadratic_x2_min_1_x1000,
@@ -105,7 +115,9 @@ criterion_group!(
     brent_x2_min_1_x1000,
     brent_x4_min_1_x1000,
     newton_raphson_x2_min_1_x1000,
-    newton_raphson_x4_min_1_x1000
+    newton_raphson_x4_min_1_x1000,
+    sturm_x5_min_1_x1000,
+    eigen_x5_min_1_x1000
 );
 
 criterion_main!(benches);
